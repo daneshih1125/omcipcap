@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omci_utils"
+dynamic = ["version"]
+description = "OMCI analysis and MIB diff tools"
+requires-python = ">=3.12"
+dependencies = [
+    "scapy>=2.5.0",
+]
+
+[project.scripts]
+omcicheck = "omci.cli:main"
+omcidiff = "omci.cli:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "omci.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["omci*"]
