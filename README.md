@@ -10,8 +10,10 @@
     * **Vendor-Specific MEs**: Identifies MEs in reserved or proprietary ranges.
     * **Provisioning Failures**: Detects non-success response codes (e.g., `UNKNOWN_ME`, `INSTANCE_EXISTS`).
     * **Intelligent Filtering**: Quickly isolate issues using `--only-vendor` or `--only-failed` flags.
+    * **RTT Latency Analysis**: Automatically calculates the time difference between Request and Response. Users can flag slow packets using the --rtt-threshold (default: 1s).
 * `omcidiff`: is a powerful utility for performing Differential Analysis between two MIB snapshots. It is specifically designed to help firmware engineers identify configuration drifts
     * ***Dynamic ME Extension***: Use the --mib-json flag to dynamically load and overwrite ME definitions. This transforms raw hex data into readable fields without modifying the source code.
+* **`omcigraphic`**: generates an interactive, hierarchical network topology from a MIB snapshot. It is designed to visualize the complex logical relationships between Managed Entities (MEs), helping engineers verify provisioning flows from the UNI/Management side to the ANI/T-CONT side.
 * **Professional Output**: Features color-coded Terminal output and standardized hex formatting for Instance IDs.
 
 ## Project Structure
@@ -79,6 +81,26 @@ omcicheck examples/omcicheck_example.pcap
 ```
 ![omcicheck output example](examples/omcicheck_example.png)
 
+omcicheck with --rtt-threshold argument
+```bash
+$ omcicheck --rtt-threshold=1100 omcicheck_example.pcap
+Analyzing: omcicheck_example.pcap
+
+No.    ID       Action             ME Class     ME Instance  Result                         RTT          Status           ME desc
+------------------------------------------------------------------------------------------------------------------------
+38     19       MIB_UPLOAD_NEXT    241          0x0001                                      0                             Reserved for vendor-specific managed entities
+40     20       MIB_UPLOAD_NEXT    350          0x0001                                      0                             Reserved for vendor-specific use
+52     26       MIB_UPLOAD_NEXT    500          0x000a                                      0                             Reserved for future standardization
+58     29       CREATE             84           0x0001       Err: INSTANCE_EXISTS (7)       0.000033                      VLAN tagging filter data
+59     30       SET                241          0x0001                                      0                             Reserved for vendor-specific managed entities
+60     30       SET                241          0x0001       Err: UNKNOWN_ME (4)            0.000032                      Reserved for vendor-specific managed entities
+62     31       GET                257          0x0000       Success                        1.200000     [LATE]           ONT2-G
+64     32       GET                257          0x0000                                      0            [TID_DUPLOCATE]  ONT2-G
+------------------------------------------------------------------------------------------------------------------------
+Summary: Found 2 failures, 5 Vendor packets, 1 duplicate packets, 1 late packets
+$
+```
+
 ### omcidiff
  Analyze two pcap files to identify differences in MIB provisioning
 ```bash
@@ -108,11 +130,19 @@ To define your own Vendor MEs for the --mib-json flag, use the following structu
 ```json
 {
   "355": ["HWTC 355 ME", [
-    ["CPE mode", 3, "str"],
-    ["Support VOIP", 1, "u8"]
+    ["CPE mode", 3, "str", False],
+    ["Support VOIP", 1, "u8", False]
   ]]
 }
 ```
+
+### omcigraphic
+```
+omcigraphic omci.pcap
+```
+will generate output.html in current directory
+![PPTP](examples/pptp_graphic.png)
+![IPHOST](examples/iphost_graphic.png)
 
 
 ## Setup omci_utils on Windows Virtual Environment
