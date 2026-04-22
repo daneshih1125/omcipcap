@@ -144,6 +144,13 @@ will generate output.html in current directory
 ![PPTP](examples/pptp_graphic.png)
 ![IPHOST](examples/iphost_graphic.png)
 
+### omcivlan
+```
+omcivlan omci.pcap
+```
+List All ME 171 instances and detail of VLAN table
+![omcivlan](examples/omcivlan.png)
+
 
 ## Setup omci_utils on Windows Virtual Environment
 1. Create the Environment
