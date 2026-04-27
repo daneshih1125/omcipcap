@@ -411,53 +411,43 @@ def run_omcivlan(pcap):
 
 
 def main():
-    prog_name = os.path.basename(sys.argv[0])
+    parser = argparse.ArgumentParser(prog="omcipcap", description="OMCI PCAP Diagnostic & Analysis Tool")
+    subparsers = parser.add_subparsers(dest="command", help="Available analysis commands")
 
-    if prog_name == "omcicheck":
-        parser = argparse.ArgumentParser(description="OMCI Check Tool")
-        parser.add_argument("pcap", help="Path to pcap file")
-        parser.add_argument("--only-vendor", action="store_true")
-        parser.add_argument("--only-failed", action="store_true")
-        parser.add_argument(
-            "--rtt-threshold",
-            type=float,
-            default=1000.0,
-            help="RTT threshold in milliseconds to flag slow responses (default: 1000ms)",
-        )
+    # --- Sub-command: check ---
+    check_p = subparsers.add_parser("check", help="Analyze RTT, TID duplicates, and failures")
+    check_p.add_argument("pcap", help="Path to pcap file")
+    check_p.add_argument("--rtt-threshold", type=float, default=1000.0, help="RTT threshold in ms")
+    check_p.add_argument("--only-vendor", action="store_true")
+    check_p.add_argument("--only-failed", action="store_true")
 
-        args = parser.parse_args()
-        run_omcicheck(
-            args.pcap,
-            only_vendor=args.only_vendor,
-            only_failed=args.only_failed,
-            rtt_threshold=args.rtt_threshold,
-        )
-    elif prog_name == "omcidiff":
-        parser = argparse.ArgumentParser(description="OMCI MIB Diff Tool")
-        parser.add_argument("pcap1", help="Path to the first pcap file (Baseline)")
-        parser.add_argument("pcap2", help="Path to the second pcap file (Target)")
-        parser.add_argument(
-            "--mib-json", help="Path to custom ME JSON definition file", default=None
-        )
+    # --- Sub-command: diff ---
+    diff_p = subparsers.add_parser("diff", help="Compare MIB snapshots between two pcaps")
+    diff_p.add_argument("pcap1", help="Baseline pcap")
+    diff_p.add_argument("pcap2", help="Target pcap")
+    diff_p.add_argument("--mib-json", help="Custom ME JSON definition")
 
-        args = parser.parse_args()
+    # --- Sub-command: graphic ---
+    graph_p = subparsers.add_parser("graphic", help="Generate interactive topology HTML")
+    graph_p.add_argument("pcap", help="Path to pcap file")
 
-        if args.mib_json:
-            load_mib_json(args.mib_json)
+    # --- Sub-command: vlan_tpl ---
+    vlan_p = subparsers.add_parser("vlan_tpl", help="Analyze OMCI VLAN tagging logic (Table-driven)")
+    vlan_p.add_argument("pcap", help="Path to pcap file")
+
+    args = parser.parse_args()
+
+    if args.command == "check":
+        run_omcicheck(args.pcap, args.only_vendor, args.only_failed, args.rtt_threshold)
+    elif args.command == "diff":
+        if args.mib_json: load_mib_json(args.mib_json)
         run_omcidiff(args.pcap1, args.pcap2)
-    elif prog_name == "omcigraphic":
-        parser = argparse.ArgumentParser(description="OMCI graphic Tool")
-        parser.add_argument("pcap", help="Path to pcap file")
-        args = parser.parse_args()
+    elif args.command == "graphic":
         run_omcigraph(args.pcap)
-    elif prog_name == "omcivlan":
-        parser = argparse.ArgumentParser(description="OMCI VLAN Logic Analyzer")
-        parser.add_argument("pcap", help="Path to pcap file")
-        args = parser.parse_args()
+    elif args.command == "vlan_tpl":
         run_omcivlan(args.pcap)
-
+    else:
+        parser.print_help()
 
 if __name__ == "__main__":
     main()
-
-# vim: set ts=4 sw=4 et:

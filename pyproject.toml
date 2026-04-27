@@ -13,10 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-omcicheck = "omci.cli:main"
-omcidiff = "omci.cli:main"
-omcigraphic = "omci.cli:main"
-omcivlan = "omci.cli:main"
+omcipcap = "omci.cli:main"
 
 [tool.setuptools.dynamic]
 version = {attr = "omci.__version__"}
