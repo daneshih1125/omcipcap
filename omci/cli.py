@@ -431,8 +431,8 @@ def main():
     graph_p = subparsers.add_parser("graphic", help="Generate interactive topology HTML")
     graph_p.add_argument("pcap", help="Path to pcap file")
 
-    # --- Sub-command: vlan_tpl ---
-    vlan_p = subparsers.add_parser("vlan_tpl", help="Analyze OMCI VLAN tagging logic (Table-driven)")
+    # --- Sub-command: vlan_tbl ---
+    vlan_p = subparsers.add_parser("vlan_tbl", help="Analyze OMCI VLAN tagging logic (Table-driven)")
     vlan_p.add_argument("pcap", help="Path to pcap file")
 
     args = parser.parse_args()
@@ -444,7 +444,7 @@ def main():
         run_omcidiff(args.pcap1, args.pcap2)
     elif args.command == "graphic":
         run_omcigraph(args.pcap)
-    elif args.command == "vlan_tpl":
+    elif args.command == "vlan_tbl":
         run_omcivlan(args.pcap)
     else:
         parser.print_help()

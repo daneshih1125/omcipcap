@@ -14,7 +14,7 @@
 * **`omcipcap diff`**: is a powerful utility for performing Differential Analysis between two MIB snapshots. It is specifically designed to help firmware engineers identify configuration drifts
     * **Dynamic ME Extension**: Use the --mib-json flag to dynamically load and overwrite ME definitions. This transforms raw hex data into readable fields without modifying the source code.
 * **`omcipcap graphic`**: generates an interactive, hierarchical network topology from a MIB snapshot. It is designed to visualize the complex logical relationships between Managed Entities (MEs), helping engineers verify provisioning flows from the UNI/Management side to the ANI/T-CONT side.
-* **`omcipcap vlan_tpl`**: Provides a deep-dive analysis of VLAN Tagging Filter Data and VLAN Tagging Operation Configuration Data. It decodes the complex, table-driven logic of OMCI VLAN processing into a human-readable format.
+* **`omcipcap vlan_tbl`**: Provides a deep-dive analysis of VLAN Tagging Filter Data and VLAN Tagging Operation Configuration Data. It decodes the complex, table-driven logic of OMCI VLAN processing into a human-readable format.
     * **Logic Reconstruction**: Automatically parses Filter/Treatment bit-fields to visualize how the ONU handles Untagged, Single-tagged, and Double-tagged frames.
     * **Semantic Mapping**: Translates raw hex values into clear actions (e.g., Insert 1 tag, Modify VID, Discard).
     * **ME Association**: Links VLAN rules directly to their associated Managed Entities, such as Physical Path Termination Points (PPTP) or MAC Bridge Ports, showing the exact association mode and instance IDs.
@@ -174,9 +174,9 @@ will generate output.html in current directory
 ![PPTP](examples/pptp_graphic.png)
 ![IPHOST](examples/iphost_graphic.png)
 
-### omcipcap vlan_tpl
+### omcipcap vlan_tbl
 ```
-omcipcap vlan_tpl omci.pcap
+omcipcap vlan_tbl omci.pcap
 ```
 List All ME 171 instances and detail of VLAN table
 ![omcivlan](examples/omcivlan.png)
@@ -209,17 +209,17 @@ pip install -e .
 5. Verify the Tool
 ```PowerShell
 (venv) PS C:\Github\omci_utils> omcipcap -h
-usage: omcipcap [-h] {check,diff,graphic,vlan_tpl} ...
+usage: omcipcap [-h] {check,diff,graphic,vlan_tbl} ...
 
 OMCI PCAP Diagnostic & Analysis Tool
 
 positional arguments:
-  {check,diff,graphic,vlan_tpl}
+  {check,diff,graphic,vlan_tbl}
                         Available analysis commands
     check               Analyze RTT, TID duplicates, and failures
     diff                Compare MIB snapshots between two pcaps
     graphic             Generate interactive topology HTML
-    vlan_tpl            Analyze OMCI VLAN tagging logic (Table-driven)
+    vlan_tbl            Analyze OMCI VLAN tagging logic (Table-driven)
 
 options:
   -h, --help            show this help message and exit
