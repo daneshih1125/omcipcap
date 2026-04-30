@@ -17,6 +17,11 @@ authors = [
     {name = "Dong Yuan Shih", email = "daneshih1125@gmail.com"}
 ]
 
+[project.urls]
+"Homepage" = "https://github.com/daneshih1125/omcipcap"
+"Repository" = "https://github.com/daneshih1125/omcipcap"
+"Bug Tracker" = "https://github.com/daneshih1125/omcipcap/issues"
+
 [project.scripts]
 omcipcap = "omci.cli:main"
 
